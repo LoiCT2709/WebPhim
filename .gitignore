@@ -1,0 +1,36 @@
+# Build
+bin/
+obj/
+
+# User-specific files
+*.user
+*.rsuser
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Visual Studio
+.vs/
+
+# Logs
+*.log
+
+# Temp files
+*.tmp
+*.temp
+
+# Libman
+libman.json
+
+# Backup
+*.bak
+
+# Database files
+*.mdf
+*.ldf
+
+# Publish
+publish/
+
+# Config secrets
+appsettings.*.local.json
