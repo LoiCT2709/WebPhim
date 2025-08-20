@@ -79,6 +79,20 @@ namespace WebPhim.Migrations
                     b.HasKey("CountryID");
 
                     b.ToTable("Country");
+
+                    b.HasData(
+                        new
+                        {
+                            CountryID = "US",
+                            CountryName = "United States",
+                            ISOCode = ""
+                        },
+                        new
+                        {
+                            CountryID = "UK",
+                            CountryName = "United Kingdom",
+                            ISOCode = ""
+                        });
                 });
 
             modelBuilder.Entity("WebPhim.Models.Favorite", b =>
@@ -179,6 +193,38 @@ namespace WebPhim.Migrations
                     b.HasIndex("CountryID");
 
                     b.ToTable("Movies");
+
+                    b.HasData(
+                        new
+                        {
+                            MovieID = "M001",
+                            CountryID = "US",
+                            CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "A mind-bending thriller",
+                            Duration = 148,
+                            PosterURL = "/images/inception.jpg",
+                            ReleaseDate = new DateTime(2010, 7, 16, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Status = "Active",
+                            Title = "Inception",
+                            TrailerURL = "https://youtube.com/...",
+                            VideoURL = "/videos/inception.mp4",
+                            ViewCount = 0
+                        },
+                        new
+                        {
+                            MovieID = "M002",
+                            CountryID = "US",
+                            CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Exploring space and time",
+                            Duration = 169,
+                            PosterURL = "/images/interstellar.jpg",
+                            ReleaseDate = new DateTime(2014, 11, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Status = "Active",
+                            Title = "Interstellar",
+                            TrailerURL = "https://youtube.com/...",
+                            VideoURL = "/videos/interstellar.mp4",
+                            ViewCount = 0
+                        });
                 });
 
             modelBuilder.Entity("WebPhim.Models.MovieGenre", b =>

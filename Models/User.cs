@@ -6,19 +6,19 @@ namespace WebPhim.Models
     {
         [Key]
         [StringLength(20)]
-        public required string UserID { get; set; }
+        public  string? UserID { get; set; }
 
         [Required, StringLength(100)]
         public string? UserName { get; set; }
 
         [Required, StringLength(255)]
-        public required string Email { get; set; }
+        public string? Email { get; set; }
 
         [Required, StringLength(255)]
-        public required string PasswordHash { get; set; }
+        public  string? PasswordHash { get; set; }
         
         [Required, StringLength(50)]
-        public required string Role {  get; set; }
+        public  string? Role {  get; set; }
 
         public string? Avatar {  get; set; }
 
@@ -26,7 +26,7 @@ namespace WebPhim.Models
 
         //Status Account:
         [StringLength(50)]
-        public required string Status { get; set; }
+        public  string? Status { get; set; }
         public bool IsVerified { get; set; }
 
         //Navigation
@@ -37,7 +37,23 @@ namespace WebPhim.Models
         public ICollection<WatchHistory> WatchHistories { get; set; } = new List<WatchHistory>();
         public ICollection<Comment> Comments { get; set; } = new List<Comment>();
 
+        public User()
+        {
 
+        }
+
+
+        public User(string userName, string email)
+        {
+            UserName = userName;
+            Email = email;
+
+            // placeholder tạm
+            UserID = string.Empty;
+            PasswordHash = string.Empty;
+            Role = string.Empty;
+            Status = string.Empty;
+        }
 
 
 

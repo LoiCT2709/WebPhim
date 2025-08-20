@@ -3,10 +3,12 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace WebPhim.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class SeedInitialData : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -263,6 +265,24 @@ namespace WebPhim.Migrations
                         principalTable: "Users",
                         principalColumn: "UserID",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.InsertData(
+                table: "Country",
+                columns: new[] { "CountryID", "CountryName", "ISOCode" },
+                values: new object[,]
+                {
+                    { "UK", "United Kingdom", "" },
+                    { "US", "United States", "" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Movies",
+                columns: new[] { "MovieID", "CountryID", "CreateAt", "Description", "Duration", "PosterURL", "ReleaseDate", "Status", "Title", "TrailerURL", "VideoURL", "ViewCount" },
+                values: new object[,]
+                {
+                    { "M001", "US", new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "A mind-bending thriller", 148, "/images/inception.jpg", new DateTime(2010, 7, 16, 0, 0, 0, 0, DateTimeKind.Unspecified), "Active", "Inception", "https://youtube.com/...", "/videos/inception.mp4", 0 },
+                    { "M002", "US", new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Exploring space and time", 169, "/images/interstellar.jpg", new DateTime(2014, 11, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), "Active", "Interstellar", "https://youtube.com/...", "/videos/interstellar.mp4", 0 }
                 });
 
             migrationBuilder.CreateIndex(

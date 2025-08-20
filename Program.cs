@@ -1,6 +1,8 @@
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using WebPhim.Data;
-
+using WebPhim.Repositories;
+using WebPhim.Repositories.Interfaces;
 namespace WebPhim
 {
     public class Program
@@ -9,8 +11,22 @@ namespace WebPhim
         {
             var builder = WebApplication.CreateBuilder(args);
 
+
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+
+            //Thêm session đăng nhập:
+            // Cookie Auth
+            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(options =>
+                {
+                    options.LoginPath = "/Auth/Login";
+                    options.LogoutPath = "/Auth/Logout";
+                   
+                });
+            builder.Services.AddAuthorization();
+
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
             //Them ket noi db
             builder.Services.AddDbContext<WebPhimDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("WebPhimHayDB")));
@@ -28,6 +44,17 @@ namespace WebPhim
             app.UseStaticFiles();
 
             app.UseRouting();
+            // Ngăn trình duyệt cache khi đã login/logout
+            app.Use(async (context, next) =>
+            {
+                context.Response.Headers["Cache-Control"] = "no-store, no-cache, must-revalidate";
+                context.Response.Headers["Pragma"] = "no-cache";
+                context.Response.Headers["Expires"] = "0";
+                await next();
+            });
+
+            app.UseAuthentication();
+
 
             app.UseAuthorization();
 
