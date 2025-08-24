@@ -48,7 +48,7 @@ namespace WebPhim.Repositories
             var user = _context.Users.FirstOrDefault(x =>x.Email == email);
             if (user == null)
             {
-                throw new Exception($"Unable to find user {email}");
+               
             }
             return user;
         }

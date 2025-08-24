@@ -59,8 +59,12 @@
                     <ul class="navbar-nav ms-3">
                         @if (!User.Identity.IsAuthenticated)
                         {
-                            <li class="nav-item"><a class="nav-link" href="/Auth/Login">Đăng nhập</a></li>
-                            <li class="nav-item"><a class="nav-link" href="/Auth/Register">Đăng ký</a></li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">Đăng nhập</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/Auth/Register">Đăng ký</a>
+                            </li>
                         }
                         else
                         {
@@ -102,6 +106,21 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script>
+        // Nếu đang ở trang Register thì disable nút mở Login Modal
+        if (path.includes("/auth/register")) {
+            document.querySelectorAll('[data-bs-target="#loginModal"]').forEach(btn => {
+                btn.addEventListener("click", function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    alert("Bạn đang ở trang Đăng ký, không thể mở Đăng nhập.");
+                });
+            });
+        }
+    </script>
+    @await Html.PartialAsync("~/Views/Auth/Login.cshtml", new WebPhim.Models.LoginViewModel())
+
+
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>

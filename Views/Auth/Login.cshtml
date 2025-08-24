@@ -1,45 +1,115 @@
 ﻿@model WebPhim.Models.LoginViewModel
 
-@{
-    ViewData["Tittle"] = "Login";
+@if (TempData["SuccessMessage"] != null)
+{
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var loginModalEl = document.getElementById('loginModal');
+            if (loginModalEl) {
+                var modal = new bootstrap.Modal(loginModalEl);
+                modal.show();
+
+                // thay nội dung modal thành thông báo thành công
+                loginModalEl.querySelector(".modal-body").innerHTML = `
+                            <div class="text-center p-4">
+                                <div class="text-success mb-3" style="font-size:2rem;">✔</div>
+                                <h5>Đăng nhập thành công!</h5>
+                            </div>
+                        `;
+                  
+                //PHÁT ÂM THANH LOGIN THÀNH CÔNG
+                var audio = new Audio('/sounds/oh_yeah.mp3')
+                audio.play();
+                // sau 2 giây tự động đóng modal
+                setTimeout(() => {
+                    modal.hide();
+                 
+                }, 2000);
+            }
+        });
+    </script>
 }
 
-
-<h2 class="text-center">Đăng nhập</h2>
-
-<div class="row justify-content-center">
-    <div class="col-md-4">
-        <form asp-action="Login" method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
-            <div class="form-group mb-3">
-                <label asp-for="Email" class="form-label"></label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
+<!-- Login Modal -->
+<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="loginModalLabel">Đăng nhập</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
+            <div class="modal-body">
 
-            <div class="form-group mb-3">
-                <label asp-for="Password" class="form-label"></label>
-                <input asp-for="Password" class="form-control" type="password" />
-                <span asp-validation-for="Password" class="text-danger"></span>
+                @* Hiển thị lỗi nếu có *@
+                @if (TempData["ErrorMessage"] != null)
+                {
+                    <div class="alert alert-danger alert-auto-hide">
+                        @TempData["ErrorMessage"]
+                    </div>
+                }
+
+                <form asp-controller="Auth" asp-action="Login" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="Email" class="form-label"></label>
+                        <input asp-for="Email" class="form-control" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="Password" class="form-label"></label>
+                        <input asp-for="Password" class="form-control" type="password" />
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100">Đăng nhập</button>
+
+                    <div class="text-center mt-3">
+                        <a asp-controller="Auth" asp-action="Register">Chưa có tài khoản? Đăng ký</a>
+                    </div>
+                </form>
             </div>
-
-        @*     <div class="form-check mb-3">
-                <input asp-for="RememberMe" class="form-check-input" />
-                <label asp-for="RememberMe" class="form-check-label">Ghi nhớ đăng nhập</label>
-            </div> *@
-
-            <button type="submit" class="btn btn-primary w-100">Đăng nhập</button>
-
-            <div class="text-center mt-3">
-                <a asp-controller="Auth" asp-action="Register">Chưa có tài khoản? Đăng ký</a>
-            </div>
-        </form>
+        </div>
     </div>
 </div>
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var loginModalEl = document.getElementById('loginModal');
+            if (!loginModalEl) return;
+
+            var modal = new bootstrap.Modal(loginModalEl, {
+                backdrop: 'static', // Không tắt khi click ngoài
+                keyboard: false      // Không tắt khi nhấn Esc
+            });
+
+            // Mở modal nếu có lỗi hoặc muốn luôn mở
+            if (document.querySelector('.alert-auto-hide') || @((TempData["ForceOpen"] != null).ToString().ToLower())) {
+                modal.show();
+            }
+
+
+            loginModalEl.addEventListener('hidden.bs.modal', function () {
+                var form = loginModalEl.querySelector('form');
+                form.reset();
+                form.querySelectorAll('input').forEach(i => i.value = '');
+                // Xóa tất cả alert lỗi
+                document.querySelectorAll('.alert-auto-hide').forEach(el => el.remove());
+
+            });
+
+            // Ẩn alert lỗi sau 10 giây
+            setTimeout(() => {
+                document.querySelectorAll('.alert-auto-hide').forEach(el => {
+                    el.style.transition = "opacity 0.5s ease";
+                    el.style.opacity = "0";
+                    setTimeout(() => el.remove(), 500);
+                });
+            }, 10000);
+        });
+    </script>
 }

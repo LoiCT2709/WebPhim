@@ -50,13 +50,18 @@ namespace WebPhim.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
-            if (!ModelState.IsValid) return View(model);
+            if (!ModelState.IsValid)
+            {
+                // Đánh dấu modal cần mở lại
+                TempData["ForceOpen"] = true;
+                return View(model); // trả về lại view cùng model lỗi
+            }
 
             var user = _userRepository.GetUserByEmail(model.Email);
 
             if (user == null || !_userRepository.CheckPassword(user, model.Password))
             {
-                ModelState.AddModelError("", "Email hoặc mật khẩu không đúng!");
+                TempData["ErrorMessage"] = "Email hoặc mật khẩu không đúng!";
                 return View(model);
             }
 
@@ -75,6 +80,7 @@ namespace WebPhim.Controllers
                 CookieAuthenticationDefaults.AuthenticationScheme,
                 new ClaimsPrincipal(claimsIdentity));
 
+            TempData["SuccessMessage"] = "Đăng nhập thành công!";
             return RedirectToAction("Index", "Home");
         }
 

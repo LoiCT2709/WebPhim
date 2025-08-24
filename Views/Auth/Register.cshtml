@@ -1,40 +1,141 @@
-﻿
-@model WebPhim.Models.RegisterViewModel
+﻿@model WebPhim.Models.RegisterViewModel
 
 @{
     ViewData["Title"] = "Đăng ký tài khoản";
 }
-<h2>Đăng ký</h2>
 
-<form asp-action ="Register" method="post">
-    <div asp-validation-summary="All" class="text-danger"></div>
-    <div class="form-group">
-        <label asp-for="UserName"></label>
-        <input asp-for="UserName" class="form-control" />
-        <span asp-validation-for="UserName" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="Email"></label>
-        <input asp-for="Email" class="form-control" />
-        <span asp-validation-for="Email" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="Password"></label>
-        <input asp-for="Password" type="password" class="form-control" />
-        <span asp-validation-for="Password" class="text-danger"></span>
-    </div>
+<div class="container mt-5 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-lg border-0 rounded-4">
+                <div class="card-body p-5">
+                    <h2 class="text-center mb-4 fw-bold text-primary">Đăng ký tài khoản</h2>
+                    <form asp-action="Register" method="post" class="needs-validation" novalidate>
+                        <div asp-validation-summary="All" class="alert alert-danger d-none" id="validationSummary"></div>
 
-    <div class="form-group">
-        <label asp-for="ConfirmPassword"></label>
-        <input asp-for="ConfirmPassword" type="password" class="form-control" />
-        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-    </div>
+                        <div class="mb-4">
+                            <label asp-for="UserName" class="form-label fw-semibold">Tên người dùng</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light"><i class="bi bi-person"></i></span>
+                                <input asp-for="UserName" class="form-control form-control-lg rounded-end" required />
+                                <span asp-validation-for="UserName" class="text-danger mt-1 d-block"></span>
+                            </div>
+                        </div>
 
-    <button type="submit" class="btn btn-primary">Đăng ký</button>
-</form>
+                        <div class="mb-4">
+                            <label asp-for="Email" class="form-label fw-semibold">Email</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light"><i class="bi bi-envelope"></i></span>
+                                <input asp-for="Email" type="email" class="form-control form-control-lg rounded-end" required />
+                                <span asp-validation-for="Email" class="text-danger mt-1 d-block"></span>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="Password" class="form-label fw-semibold">Mật khẩu</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light"><i class="bi bi-lock"></i></span>
+                                <input asp-for="Password" type="password" class="form-control form-control-lg rounded-end" required />
+                                <span asp-validation-for="Password" class="text-danger mt-1 d-block"></span>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="ConfirmPassword" class="form-label fw-semibold">Xác nhận mật khẩu</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light"><i class="bi bi-lock"></i></span>
+                                <input asp-for="ConfirmPassword" type="password" class="form-control form-control-lg rounded-end" required />
+                                <span asp-validation-for="ConfirmPassword" class="text-danger mt-1 d-block"></span>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg fw-semibold py-2">Đăng ký</button>
+                        </div>
+
+                        <div class="text-center mt-3">
+                            <p class="text-muted">Đã có tài khoản? <a href="@Url.Action("Login", "Account")" class="text-primary fw-semibold text-decoration-none">Đăng nhập</a></p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+    <script>
+        // Client-side validation feedback
+        (function () {
+            'use strict'
+            var forms = document.querySelectorAll('.needs-validation')
+            Array.prototype.slice.call(forms).forEach(function (form) {
+                form.addEventListener('submit', function (event) {
+                    var validationSummary = document.getElementById('validationSummary');
+                    if (!form.checkValidity()) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                        validationSummary.classList.remove('d-none');
+                    } else {
+                        validationSummary.classList.add('d-none');
+                    }
+                    form.classList.add('was-validated')
+                }, false)
+            })
+        })();
+
+        // Real-time feedback for input fields
+        document.querySelectorAll('.form-control').forEach(input => {
+            input.addEventListener('input', function () {
+                if (this.checkValidity()) {
+                    this.classList.remove('is-invalid');
+                    this.classList.add('is-valid');
+                } else {
+                    this.classList.remove('is-valid');
+                    this.classList.add('is-invalid');
+                }
+            });
+        });
+    </script>
+    <style>
+        .form-control.is-valid {
+            border-color: #28a745;
+            background-image: none;
+        }
+
+        .form-control.is-invalid {
+            border-color: #dc3545;
+            background-image: none;
+        }
+
+        .input-group-text {
+            border-right: 0;
+        }
+
+        .form-control-lg {
+            border-left: 0;
+        }
+
+        .card {
+            transition: transform 0.2s;
+        }
+
+            .card:hover {
+                transform: translateY(-5px);
+            }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+            transition: background-color 0.3s;
+        }
+
+            .btn-primary:hover {
+                background-color: #0056b3;
+                border-color: #004085;
+            }
+    </style>
 }
